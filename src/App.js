@@ -1,58 +1,68 @@
 import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
-import './App.css';
+import ReactHtmlParser from 'react-html-parser';
+import random from './random.png';
+import Cardboard from './Cardboard';
+import Control from './Control';
+import Card from './Card'; 
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      cardCount: null,
+      cardInput: null,
+      cardPage: null,
+      card: {}
+    }
+    this.Card = new Card();
+    this.requestBase = this.requestBase.bind(this);
+    this.requestCard = this.requestCard.bind(this);
+  }
+
+  // lifecycle: get base data after mounted 
+  componentDidMount() {
+    this.requestBase();
+  }
+
+  // get access_token and cardCount
+  requestBase() {
+    this.Card.getToken().then((access_token) => {
+      this.Card.getCardCount().then((cardCount) => {
+        this.setState({cardCount: cardCount});
+      })
+    })
+  }
+
+  // get cardPage and card if cardPage is changed
+  requestCard(newCardPage) {
+    if (this.state.cardPage !== newCardPage) {
+      this.setState({
+        cardPage: newCardPage
+      })
+      this.Card.getCard(newCardPage).then((card) => {
+        this.setState({
+          card: card
+        });
+      })
+    }
+  }
+
+  render() {
+    return (
+      <div className="Background">
+          <Cardboard
+            card={this.state.card}
+          />
+          <Control 
+            cardCount={this.state.cardCount}
+            cardPage={this.state.cardPage}
+            requestCard={this.requestCard}
+          />
+      </div>
+    )
+  }
+
 }
 
 export default App;
