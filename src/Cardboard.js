@@ -1,26 +1,23 @@
-import React from 'react';
-import ReactHtmlParser from 'react-html-parser';
-import random from './random.png';
-
+// import ReactHtmlParser from 'react-html-parser';
+import random from './img/random_cardback.png';
 
 class Cardboard extends React.Component {
-
-  render() {
+  render () {
+    const cardImage = this.props.card.image ? this.props.card.image : random;
     return (
-      <div className="Cardboard">
-          <div className="Cardboard-Left">
-            <img src={this.props.card.image ? this.props.card.image : random} alt=""/>
-          </div>
-          <div className="Cardboard-Right">
-            <p className="Card-Name">{this.props.card.name}</p>
-            <p className="Card-Flavor-Text">{this.props.card.flavorText}</p>
-            <p className="Card-Text">{ReactHtmlParser(this.props.card.text)}</p>
-            <p className="Card-Artist-Name">{this.props.card.artistName}</p>
-          </div>
+      <div className="cardboard">
+        <div className="card-info left">
+          <img className="card-image" src={cardImage}/>
         </div>
-    )
-  }
-
+        <div className="card-info right">
+          <p className="card-name">{this.props.card.name}</p>
+          <p className="card-flavor-text">{this.props.card.flavorText}</p>
+          <p className="card-text">{this.props.card.text}</p>
+          <p className="card-artist-name">Artist: {this.props.card.artistName}</p>
+        </div>
+      </div>
+    );
+  };
 }
 
 export default Cardboard;
